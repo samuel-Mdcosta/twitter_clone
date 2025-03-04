@@ -3,7 +3,8 @@
 
     use MF\Model\Model;
 
-    class usuario extends Model{
+    class Usuario extends Model{
+
         private $id;
         private $nome;
         private $email;
@@ -19,8 +20,10 @@
 
         //salva
         public function save(){
+            //insere as informacoes do cadastro no banco
             $query = "
-                insert into usuarios(nome, email, senha) values(:nome, :email, :senha);
+            INSERT INTO usuarios (nome, email, senha) 
+            VALUES (:nome, :email, :senha);
             ";
             $stmt = $this->db->prepare($query);
             $stmt->bindValue(':nome', $this->__get('nome'));
@@ -32,6 +35,21 @@
         } 
 
         //valida o login
-        
+        public function validaCadastro(){
+            $valido = true;
+
+            if (strlen($this->__get('nome'))< 3){
+                $valido = false;
+            }
+            if (strlen($this->__get('email'))< 3){
+                $valido = false;
+            }
+            if (strlen($this->__get('senha'))< 3){
+                $valido = false;
+            }
+
+            return $valido;
+        }
+        //recupera o usuario por e-mail;
         //recupera o usuario por e-mao;
     }
