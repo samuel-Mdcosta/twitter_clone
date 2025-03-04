@@ -2,6 +2,7 @@
     namespace App\Models;
 
     use MF\Model\Model;
+use PDO;
 
     class Usuario extends Model{
 
@@ -50,6 +51,24 @@
 
             return $valido;
         }
+
         //recupera o usuario por e-mail;
-        //recupera o usuario por e-mao;
+        public function getUsuarioEmail(){
+            $query = "
+                SELECT 
+                    nome, 
+                    email 
+                FROM 
+                    usuarios 
+                WHERE 
+                    email = :email
+            ";
+            $stmt= $this->db->prepare($query);
+            $stmt->bindValue(':email', $this->__get('email'));
+            $stmt->execute();
+
+            //gera um array assosciativo
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
     }

@@ -14,6 +14,14 @@ class IndexController extends Action {
 	}
 
 	public function inscreverse() {
+
+		$this->view->usuario = array(
+			'nome'=>'',
+			'email'=>'',
+			'senha'=>'',
+		);
+
+		$this->view->erroCadastro = false;
 		$this->render('inscreverse');
 	}
 
@@ -27,12 +35,24 @@ class IndexController extends Action {
 		$usuario->__set('email', $_POST['email']);
 		$usuario->__set('senha', $_POST['senha']);
 
-		if($usuario->validaCadastro()){
-			$usuario->save();
-		}else{
+		if($usuario->validaCadastro() && count($usuario->getUsuarioEmail()) == 0){
 			
+			$usuario->save();
+			$this->render('cadastro');
+
+		}else{
+
+			$this->view->usuario = array(
+				'nome'=>$_POST['nome'],
+				'email'=>$_POST['email'],
+				'senha'=>$_POST['senha']
+			);
+
+			$this->view->erroCadastro = true;
+			$this->render('inscreverse');
 		}
 
+		return $this;
 		//executa a query do banco de dados com as informacoes recuperadas 
 	}
 }
